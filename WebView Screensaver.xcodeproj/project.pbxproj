@@ -9,8 +9,9 @@
 /* Begin PBXBuildFile section */
 		3A40066C18B53113005F43A6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A40066B18B53112005F43A6 /* Cocoa.framework */; };
 		3A40066E18B53113005F43A6 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A40066D18B53113005F43A6 /* ScreenSaver.framework */; };
-		3A40067818B53113005F43A6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A40067618B53113005F43A6 /* InfoPlist.strings */; };
-		3A40067C18B53113005F43A6 /* That_WednesdayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A40067B18B53113005F43A6 /* That_WednesdayView.m */; };
+		3A40067C18B53113005F43A6 /* WSView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A40067B18B53113005F43A6 /* WSView.m */; };
+		3A40068318B53129005F43A6 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A40068218B53129005F43A6 /* WebKit.framework */; };
+		3A40068518B53226005F43A6 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 3A40068418B53226005F43A6 /* index.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,11 +21,11 @@
 		3A40067018B53113005F43A6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		3A40067118B53113005F43A6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3A40067218B53113005F43A6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		3A40067518B53113005F43A6 /* That Wednesday-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "That Wednesday-Info.plist"; sourceTree = "<group>"; };
-		3A40067718B53113005F43A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		3A40067918B53113005F43A6 /* That Wednesday-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "That Wednesday-Prefix.pch"; sourceTree = "<group>"; };
-		3A40067A18B53113005F43A6 /* That_WednesdayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = That_WednesdayView.h; sourceTree = "<group>"; };
-		3A40067B18B53113005F43A6 /* That_WednesdayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = That_WednesdayView.m; sourceTree = "<group>"; };
+		3A40067518B53113005F43A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		3A40067B18B53113005F43A6 /* WSView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WSView.m; path = ../WSView.m; sourceTree = "<group>"; };
+		3A40068218B53129005F43A6 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		3A40068418B53226005F43A6 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = SOURCE_ROOT; };
+		3A95A94B18EA12D30036779C /* WSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSView.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A40068318B53129005F43A6 /* WebKit.framework in Frameworks */,
 				3A40066E18B53113005F43A6 /* ScreenSaver.framework in Frameworks */,
 				3A40066C18B53113005F43A6 /* Cocoa.framework in Frameworks */,
 			);
@@ -43,7 +45,7 @@
 		3A40065D18B53112005F43A6 = {
 			isa = PBXGroup;
 			children = (
-				3A40067318B53113005F43A6 /* That Wednesday */,
+				3A40067318B53113005F43A6 /* Source */,
 				3A40066A18B53112005F43A6 /* Frameworks */,
 				3A40066918B53112005F43A6 /* Products */,
 			);
@@ -60,6 +62,7 @@
 		3A40066A18B53112005F43A6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A40068218B53129005F43A6 /* WebKit.framework */,
 				3A40066B18B53112005F43A6 /* Cocoa.framework */,
 				3A40066D18B53113005F43A6 /* ScreenSaver.framework */,
 				3A40066F18B53113005F43A6 /* Other Frameworks */,
@@ -77,24 +80,16 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		3A40067318B53113005F43A6 /* That Wednesday */ = {
+		3A40067318B53113005F43A6 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3A40067A18B53113005F43A6 /* That_WednesdayView.h */,
-				3A40067B18B53113005F43A6 /* That_WednesdayView.m */,
-				3A40067418B53113005F43A6 /* Supporting Files */,
+				3A95A94B18EA12D30036779C /* WSView.h */,
+				3A40067B18B53113005F43A6 /* WSView.m */,
+				3A40068418B53226005F43A6 /* index.html */,
+				3A40067518B53113005F43A6 /* Info.plist */,
 			);
+			name = Source;
 			path = "That Wednesday";
-			sourceTree = "<group>";
-		};
-		3A40067418B53113005F43A6 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				3A40067518B53113005F43A6 /* That Wednesday-Info.plist */,
-				3A40067618B53113005F43A6 /* InfoPlist.strings */,
-				3A40067918B53113005F43A6 /* That Wednesday-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,7 +133,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Rasmus Andersson";
 			};
-			buildConfigurationList = 3A40066118B53112005F43A6 /* Build configuration list for PBXProject "That Wednesday" */;
+			buildConfigurationList = 3A40066118B53112005F43A6 /* Build configuration list for PBXProject "WebView Screensaver" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -160,7 +155,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A40067818B53113005F43A6 /* InfoPlist.strings in Resources */,
+				3A40068518B53226005F43A6 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,22 +176,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A40067C18B53113005F43A6 /* That_WednesdayView.m in Sources */,
+				3A40067C18B53113005F43A6 /* WSView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		3A40067618B53113005F43A6 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3A40067718B53113005F43A6 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		3A40067D18B53113005F43A6 /* Debug */ = {
@@ -271,11 +255,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "That Wednesday/That Wednesday-Prefix.pch";
-				INFOPLIST_FILE = "That Wednesday/That Wednesday-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = $TARGET_NAME;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Debug;
@@ -284,11 +266,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "That Wednesday/That Wednesday-Prefix.pch";
-				INFOPLIST_FILE = "That Wednesday/That Wednesday-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = $TARGET_NAME;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Release;
@@ -296,7 +276,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3A40066118B53112005F43A6 /* Build configuration list for PBXProject "That Wednesday" */ = {
+		3A40066118B53112005F43A6 /* Build configuration list for PBXProject "WebView Screensaver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A40067D18B53113005F43A6 /* Debug */,
@@ -312,6 +292,7 @@
 				3A40068118B53113005F43A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

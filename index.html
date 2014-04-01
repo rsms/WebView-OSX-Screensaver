@@ -1,0 +1,441 @@
+<html manifest="index.appcache">
+  <head>
+    <meta charset="utf-8">
+    <title>That Wednesday</title>
+    <meta name="viewport" content="width=720">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-114x114-precomposed.png">
+    <style type="text/css">
+
+@font-face {
+  font-family: 'M+ 2c';
+  font-style: normal;
+  font-weight: 300;
+  src: local('mplus-2c-light'), local('M+ 2c light'),
+       url('../res/mplus-2c-light.ttf') format('truetype');
+}
+
+body {
+  background:white;
+}
+
+svg {
+  position:absolute;
+  left:0; top:0; right:0; bottom:0;
+  /*width:730px;
+  height:730px;*/
+}
+
+svg path.arc {
+  stroke:salmon;
+  fill:none;
+  stroke-width:40;
+}
+svg path.arc.bg {
+  stroke:#eee;
+}
+svg circle.bg {
+  fill:salmon;
+  stroke:none;
+}
+
+svg text.arc {
+  fill: white;
+  font-size:28;
+  font-family: 'M+ 2c', helvetica, sans-serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility;
+  font-weight: lighter;
+  baseline-shift: sub;
+  alignment-baseline: hanging;
+  transition: opacity 200ms ease-in; -webkit-transition: opacity 200ms ease-in;
+  opacity:1;
+}
+svg text.arc.hidden {
+  opacity:0;
+}
+svg text.arc.zero {
+  opacity:0.3;
+}
+svg text.arc textPath {
+  method: stretch;
+  spacing: exact;
+}
+
+/* bright color scheme */
+body { background:white; }
+  svg path.arc.bg { stroke:#f4f4f4; }
+  svg text.arc { fill:rgba(0,0,0,0.6); }
+  svg circle.hundreds { fill:#ff6d88; }
+  svg path.arc.seconds { stroke:#fe8f54; }
+  svg path.arc.minutes { stroke:#fdc958; }
+  svg path.arc.hours { stroke:#92e16c; }
+  svg path.arc.days { stroke:#5ee697; }
+  svg path.arc.weeks { stroke:#69e4dd; }
+  svg path.arc.months { stroke:#79c2ff; }
+  svg path.arc.years { stroke:#cbb4f5; }
+
+/* dark color scheme */
+body.dark { background:black; }
+  body.dark svg path.arc.bg { stroke:#222; }
+  body.dark svg text.arc { fill:white; } body.dark svg text.arc { fill:rgba(255,255,255,0.8); }
+  body.dark svg circle.hundreds { fill:#ff6d88; }
+  body.dark svg path.arc.seconds { stroke:#fe8f54; }
+  body.dark svg path.arc.minutes { stroke:#fdc958; }
+  body.dark svg path.arc.hours { stroke:#92e16c; }
+  body.dark svg path.arc.days { stroke:#5ee697; }
+  body.dark svg path.arc.weeks { stroke:#69e4dd; }
+  body.dark svg path.arc.months { stroke:#59a3fe; }
+  body.dark svg path.arc.years { stroke:#b6a2ea; }
+
+    </style>
+  </head>
+  <body>
+    <!-- viewBox="0 0 1000 300"-->
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    </svg>
+    <script>
+
+var ref_date = new Date('Wed Jan 29 2014 18:17:00 GMT-0800 (PST)');
+
+var qs = document.location.search.toLowerCase();
+var meta_apple_mobile_web_app_status_bar_style = document.createElement('meta');
+meta_apple_mobile_web_app_status_bar_style.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
+document.querySelector('head').appendChild(meta_apple_mobile_web_app_status_bar_style);
+if (qs.indexOf('screensaver') !== -1) {
+  document.body.className = 'dark';
+  meta_apple_mobile_web_app_status_bar_style.setAttribute('content', 'black');
+} else {
+  meta_apple_mobile_web_app_status_bar_style.setAttribute('content', 'default');
+}
+
+if (!window.requestAnimationFrame) {
+  window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
+                                 window.mozRequestAnimationFrame;
+  window.cancelAnimationFrame = window.webkitCancelAnimationFrame ||
+                                window.mozCancelAnimationFrame;
+}
+
+var svg = document.querySelector('svg');
+function svg_create(nodeName) {
+  return svg.ownerDocument.createElementNS('http://www.w3.org/2000/svg', nodeName);
+}
+function svg_text(text) {
+  return svg.ownerDocument.createTextNode(text);
+}
+
+function arc_path(value, total, x, y, R) {
+  var center;
+  var alpha = 360 / total * value,
+      a = (90 - alpha) * Math.PI / 180,
+      path;
+  x = x + R * Math.cos(a);
+  y = y - R * Math.sin(a);
+  if (total == value) {
+    path = "M300,"+ (300 - R) +" A"+ R+","+ R+",0,1,1,299.99,"+ (300 - R);
+  } else {
+    if (alpha > 180) {
+      center = '1';
+    } else {
+      center = '0';
+    }
+    path = "M300,"+ (300 - R) +" A"+ R+","+ R+",0," + center +",1,"+ x+","+ y;
+  }
+  return path;
+}
+
+function animate(opt) {
+  var start_time = null;
+  var draw = function draw(scene_time) {
+    if (start_time === null) {
+      start_time = scene_time;
+    }
+    var progress = (scene_time - start_time) / opt.duration;
+    if (progress >= 1) {
+      opt.ondraw(opt.to);
+      if (typeof opt.onend === 'function') opt.onend();
+      return;
+    } else {
+      opt.ondraw(opt.from + ((opt.to - opt.from) * progress));
+    }
+    if (opt.fps) {
+      setTimeout(function() { window.requestAnimationFrame(draw); }, 1000 / opt.fps);
+    } else {
+      window.requestAnimationFrame(draw);
+    }
+  };
+
+  requestAnimationFrame(draw);
+}
+
+
+var arc_g = svg_create('g');
+svg.appendChild(arc_g);
+
+var svg_size = 720;
+var arc_g_offs = 60;
+var base_scale = 0.9;
+
+function resize_scene() {
+  var win_size = Math.min(window.innerWidth, window.innerHeight);
+  var scale = (win_size / svg_size) * base_scale;
+  var scaled_size = svg_size * scale;
+  var w_offs = (window.innerWidth - scaled_size) / 2;
+  var h_offs = (window.innerHeight - scaled_size) / 2;
+
+  arc_g.setAttribute('transform',
+    'translate('+((arc_g_offs*scale) + w_offs)+' '+((arc_g_offs*scale) + h_offs)+') '+
+    'scale('+scale+')');
+}
+resize_scene();
+window.addEventListener('resize', resize_scene);
+window.addEventListener('orientationchange', resize_scene);
+
+
+function create_arc(radius, label, maxval, update_interval, get_value) {
+  var x = 300;
+  var y = 300;
+
+  var bg_path = svg_create('path');
+  bg_path.setAttribute('class', 'arc bg');
+  bg_path.setAttribute('d', arc_path(maxval, maxval, x, y, radius));
+  arc_g.appendChild(bg_path);
+
+  var path = svg_create('path');
+  path.setAttribute('class', 'arc '+label);
+  arc_g.appendChild(path);
+
+
+  var defs, text, text_path, textPath, textPathText;
+  // if (label) {
+    defs = svg_create('defs');
+    text_path = svg_create('path');
+    text_path.id = 'path-' + radius + '-' + maxval;
+    text_path.setAttribute('d', arc_path(maxval, maxval, x, y, radius-10));
+    defs.appendChild(text_path);
+    arc_g.appendChild(defs);
+
+    text = svg_create('text');
+    text.setAttribute('class', 'arc');
+      textPath = svg_create('textPath');
+      textPath.setAttribute('startOffset', '4');
+      textPath.setAttribute('method', 'stretch');
+      textPath.setAttribute('spacing', 'exact');
+      textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + text_path.id);
+      textPathText = textPath.appendChild(svg_text(label));
+    text.appendChild(textPath);
+    arc_g.appendChild(text);
+
+    // Fixme: ...
+    var text_path2 = text_path.cloneNode(true);
+    text_path2.id += '-2';
+    defs.appendChild(text_path2);
+    var text2 = svg_create('text');
+    text2.setAttribute('class', 'arc');
+      var textPath2 = svg_create('textPath');
+      textPath2.setAttribute('startOffset', '4');
+      textPath2.setAttribute('method', 'stretch');
+      textPath2.setAttribute('spacing', 'exact');
+      textPath2.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + text_path2.id);
+      var textPathText2 = textPath2.appendChild(svg_text(label));
+    text2.appendChild(textPath2);
+    arc_g.appendChild(text2);
+  // }
+
+  var about_to_close_threshold = 7.5; // px distance from head and tail of the progress arc
+  var is_about_to_close;
+  var update_about_to_close = function(value) {
+    var about_to_close = radius - (radius * (value / maxval)) < about_to_close_threshold;
+    if (is_about_to_close !== about_to_close) {
+      is_about_to_close = about_to_close;
+      if (is_about_to_close) {
+        text2.setAttribute('class', 'arc hidden');
+      } else {
+        text2.setAttribute('class', 'arc');
+      }
+    }
+  };
+
+  var draw_path = function(value) {
+    path.setAttribute('d', arc_path(value, maxval, x, y, radius));
+    text_path.setAttribute('transform', 'rotate('+(360 / maxval * value)+' 300 300)');
+  };
+
+  var late_draw_path = function(value) {
+    text_path2.setAttribute('d', arc_path(value, maxval, x, y, radius-10));
+    update_about_to_close(value);
+  };
+
+  var update_labels = function(value) {
+    if (textPathText !== undefined) {
+      var label_value = Math.round(value);
+      if (label_value == 0) {
+        text.setAttribute('class', 'arc zero');
+        textPathText.nodeValue = label;
+      } else {
+        text.setAttribute('class', 'arc');
+        update_about_to_close(value);
+        if (is_about_to_close) {
+          text2.setAttribute('class', 'arc hidden');
+        }
+        textPathText.nodeValue = is_about_to_close ? label_value + ' ' + label : label_value;
+      }
+    }
+  };
+
+  var prev_value = get_value();
+
+  var update = function (is_initial){
+    var from = prev_value;
+    prev_value = get_value();
+    if (Math.round(prev_value) === maxval) {
+      prev_value = maxval;
+    }
+    if (is_initial || from !== prev_value) {
+      update_labels(prev_value);
+      if (is_initial && from === prev_value) {
+        draw_path(prev_value);
+        late_draw_path(prev_value);
+      } else {
+        animate({
+          // fps: 30,
+          from: from, to: prev_value,
+          duration: (prev_value === 0) ? 900 : 500, // slow when resetting, fast when progressing
+          ondraw: function (value) { draw_path(value); },
+          onend: function() {
+            if (prev_value === maxval) {
+              prev_value = 0;
+            }
+            late_draw_path(prev_value);
+          },
+        });
+      }
+    }
+  };
+  update(true);
+  setInterval(update, update_interval);
+
+  return path;
+}
+
+var d = new Date(new Date - ref_date);
+
+var easeOutQuad = function (curr_time, start_value, value_change, duration) {
+  curr_time /= duration;
+  return -value_change * curr_time*(curr_time-2) + start_value;
+};
+
+
+// var audio;
+// if ((function html5_audio(){
+//   var a = document.createElement('audio');
+//   return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+// })()) {
+//   audio = new Audio('nsmb_coin.ogg');
+//   audio.load();
+// }
+
+
+var hundreds = (function(){
+  var bg_circle = svg_create('circle');
+  bg_circle.setAttribute('class', 'bg hundreds');
+  bg_circle.setAttribute('cx', 300);
+  bg_circle.setAttribute('cy', 300);
+  var prev_p;
+  var draw = function draw(curr_time) {
+    // setTimeout(function() { window.requestAnimationFrame(draw); }, 1000 / 50);
+    window.requestAnimationFrame(draw);
+    var p = Math.round( ((new Date(new Date - ref_date)).getMilliseconds() / 1000) * 256 ) / 256;
+
+    if (prev_p !== p) {
+      var value = 40 - (40 * p);
+      if (Math.ceil(value) >= 40) {
+        value = 40;
+        update_time_deltas();
+        // audio.currentTime = 0;
+        // audio.play();
+      }
+      bg_circle.setAttribute('r', value);
+      prev_p = p;
+    }
+  }
+  draw(0);
+  arc_g.appendChild(bg_circle);
+  return bg_circle;
+})();
+
+
+function time_diff(date1, date2) {
+  var future_date, past_date;
+  date1 < date2 ? (past_date = date1, future_date = date2)
+                : (past_date = date2, future_date = date1);
+  var D = {},
+      t = future_date - past_date,
+      SECOND = 1000,
+      MINUTE = 6e4,
+      HOUR   = 36e5,   // 60 minutes
+      DAY    = 864e5,  // 24 hours
+      WEEK   = 6048e5, // 7 days,
+      MONTH = YEAR = 0, MONTH_DAYS = [31,28,31,30,31,30,31,31,30,31,30,31],
+      is_leap_year = function(y) { return y % 400 === 0 || (y % 100 !== 0 && y % 4 === 0); },
+      y = past_date.getFullYear(),
+      y_future = future_date.getFullYear(),
+      m;
+
+  for (D.years = 0; y < y_future; ) {
+    YEAR = (is_leap_year(y++) ? 366 : 365) * DAY;
+    if (t < YEAR) { break; }
+    t -= YEAR;
+    ++D.years;
+  }
+
+  D.months = 0;
+  for (m = past_date.getMonth(); t; ) {
+    (m === 11) ? (m = 0, y += 1) : m += 1;
+    MONTH = (m === 1 && is_leap_year(y)) ? 29 : MONTH_DAYS[m] * DAY;
+    if (t < MONTH) { break; }
+    t -= MONTH;
+    ++D.months;
+  }
+
+  D.weeks = Math.floor(t / WEEK);
+  t -= D.weeks * WEEK;
+  D.days = Math.floor(t / DAY);
+  t -= D.days * DAY;
+  D.hours = Math.floor(t / HOUR);
+  t -= D.hours * HOUR;
+  D.minutes = Math.floor(t / MINUTE);
+  t -= D.minutes * MINUTE;
+  D.seconds = Math.floor(t / SECOND);
+  t -= D.seconds * SECOND;
+  D.milliseconds = t;
+
+  return D;
+}
+
+
+var time_deltas = {};
+function update_time_deltas() {
+  time_deltas = time_diff(ref_date, new Date);
+}
+update_time_deltas();
+
+//         radius, label,     maxval, update_interval, get_value
+create_arc(65,     'seconds', 60,     100,  function() { return time_deltas.seconds; });
+create_arc(110,    'minutes', 60,     100,  function() { return time_deltas.minutes; });
+create_arc(155,    'hours',   24,     100,  function() { return time_deltas.hours; });
+create_arc(200,    'days',    7,      100,  function() { return time_deltas.days; });
+create_arc(245,    'weeks',   5,      1000, function() { return time_deltas.weeks; });
+create_arc(290,    'months',  12,     1000, function() { return time_deltas.months; });
+create_arc(335,    'years',   85,     1000, function() { return time_deltas.years; });
+
+// setInterval(function (){
+//   document.title = [years(), months(), weeks(), days(), hours(), minutes(), seconds() ].join(':');
+// }, 1000);
+
+
+    </script>
+  </body>
+</html>
